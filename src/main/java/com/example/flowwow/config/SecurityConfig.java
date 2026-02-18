@@ -36,12 +36,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.disable())
                 .authorizeHttpRequests(authz -> authz
+                        // Публичные эндпоинты
+                        .requestMatchers(
+                                "/",
+                                "/favicon.ico",
+                                "/error"
+                        ).permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/products/**").permitAll()
                         .requestMatchers("/api/categories/**").permitAll()
                         .requestMatchers("/api/content/**").permitAll()
+                        // Админские эндпоинты
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // ВСЁ остальное требует авторизации
                         .anyRequest().authenticated()
+                )
+                // Настройка анонимных пользователей
+                .anonymous(anonymous -> anonymous
+                        .authorities("ROLE_ANONYMOUS")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
