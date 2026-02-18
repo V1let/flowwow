@@ -7,19 +7,16 @@ public class OrderItemDto {
     private String productName;
     private BigDecimal price;
     private Integer quantity;
-    private BigDecimal total;
 
     // Конструкторы
     public OrderItemDto() {
     }
 
-    public OrderItemDto(Long productId, String productName, BigDecimal price,
-                        Integer quantity, BigDecimal total) {
+    public OrderItemDto(Long productId, String productName, BigDecimal price, Integer quantity) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
-        this.total = total;
     }
 
     // Геттеры и сеттеры
@@ -55,11 +52,9 @@ public class OrderItemDto {
         this.quantity = quantity;
     }
 
+    // total вычисляется всегда автоматически
     public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+        if (price == null || quantity == null) return BigDecimal.ZERO;
+        return price.multiply(BigDecimal.valueOf(quantity));
     }
 }

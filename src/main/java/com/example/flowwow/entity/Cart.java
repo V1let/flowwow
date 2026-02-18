@@ -1,5 +1,6 @@
 package com.example.flowwow.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Table(name = "carts")
 public class Cart extends BaseEntity {
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
     private User user;
@@ -18,42 +20,21 @@ public class Cart extends BaseEntity {
     @Column(name = "session_id")
     private String sessionId;
 
-    // Конструктор по умолчанию
-    public Cart() {
-    }
+    public Cart() {}
 
-    // Конструктор со всеми полями
     public Cart(User user, String sessionId) {
         this.user = user;
         this.sessionId = sessionId;
     }
 
-    // Геттеры и сеттеры
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public User getUser() {
-        return user;
-    }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public List<CartItem> getItems() { return items; }
+    public void setItems(List<CartItem> items) { this.items = items; }
 
-    public List<CartItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<CartItem> items) {
-        this.items = items;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
+    public String getSessionId() { return sessionId; }
+    public void setSessionId(String sessionId) { this.sessionId = sessionId; }
 }

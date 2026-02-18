@@ -49,7 +49,7 @@ public class Category extends BaseEntity {
         this.isActive = isActive;
     }
 
-    // Геттеры и сеттеры (без изменений, просто перечисляем все)
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }

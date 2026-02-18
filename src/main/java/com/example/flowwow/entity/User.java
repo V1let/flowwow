@@ -1,5 +1,8 @@
+// User.java
 package com.example.flowwow.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,11 +21,13 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String phone;
 
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnoreProperties({"users"})
     private Role role;
 
     @Column(name = "is_active")
@@ -32,26 +37,32 @@ public class User extends BaseEntity {
     private LocalDateTime lastLogin;
 
     // 🔐 ПОЛЯ ДЛЯ ВОССТАНОВЛЕНИЯ ПАРОЛЯ
+    @JsonIgnore
     @Column(name = "reset_token")
     private String resetToken;
 
+    @JsonIgnore
     @Column(name = "reset_token_expiry")
     private LocalDateTime resetTokenExpiry;
 
     // 🛒 СВЯЗЬ С КОРЗИНОЙ
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
 
-    // ==================== КОНСТРУКТОРЫ ====================
+    // конструкторы
     public User() {
     }
 
@@ -63,8 +74,6 @@ public class User extends BaseEntity {
         this.role = role;
         this.isActive = true;
     }
-
-    // ==================== ГЕТТЕРЫ И СЕТТЕРЫ ====================
 
     // Геттеры и сеттеры для существующих полей
     public Long getId() {

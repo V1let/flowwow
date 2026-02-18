@@ -63,12 +63,10 @@ public class OrderService {
             OrderItem item = new OrderItem();
             item.setOrder(order);
             item.setProduct(product);
-            item.setProductName(product.getName());
             item.setPrice(product.getPrice());
             item.setQuantity(itemRequest.getQuantity());
 
             BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
-            item.setTotal(itemTotal);
 
             order.getItems().add(item);
             totalAmount = totalAmount.add(itemTotal);

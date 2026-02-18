@@ -1,6 +1,7 @@
 package com.example.flowwow.service;
 
 import com.example.flowwow.dto.product.ProductCreateRequest;
+import com.example.flowwow.dto.product.ProductUpdateRequest;
 import com.example.flowwow.entity.Category;
 import com.example.flowwow.entity.Product;
 import com.example.flowwow.entity.ProductImage;
@@ -69,6 +70,7 @@ public class ProductService {
         Product product = new Product();
         product.setName(request.getName());
         product.setSlug(generateSlug(request.getName()));
+        product.setSlug(generateSlug(request.getName()));
         product.setCategory(category);
         product.setComposition(request.getComposition());
         product.setPrice(request.getPrice());
@@ -98,6 +100,42 @@ public class ProductService {
         product.setDescription(request.getDescription());
         product.setIsHit(request.getIsHit());
         product.setIsNew(request.getIsNew());
+
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public Product updateProductPartial(Long id, ProductUpdateRequest request) {
+        Product product = getProductById(id);
+
+        if (request.getCategoryId() != null) {
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Категория не найдена"));
+            product.setCategory(category);
+        }
+
+        if (request.getName() != null) {
+            product.setName(request.getName());
+            product.setSlug(generateSlug(request.getName()));
+        }
+        if (request.getComposition() != null) {
+            product.setComposition(request.getComposition());
+        }
+        if (request.getPrice() != null) {
+            product.setPrice(request.getPrice());
+        }
+        if (request.getOldPrice() != null) {
+            product.setOldPrice(request.getOldPrice());
+        }
+        if (request.getDescription() != null) {
+            product.setDescription(request.getDescription());
+        }
+        if (request.getIsHit() != null) {
+            product.setIsHit(request.getIsHit());
+        }
+        if (request.getIsNew() != null) {
+            product.setIsNew(request.getIsNew());
+        }
 
         return productRepository.save(product);
     }

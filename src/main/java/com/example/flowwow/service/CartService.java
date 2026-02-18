@@ -92,18 +92,18 @@ public class CartService {
         }
 
         if (quantity <= 0) {
-            cartItemRepository.delete(cartItem);
+            cart.getItems().removeIf(i -> i.getId().equals(itemId));
         } else {
             cartItem.setQuantity(quantity);
             cartItemRepository.save(cartItem);
         }
-
         return getCart(userEmail, sessionId);
     }
 
     @Transactional
     public CartDto removeFromCart(String userEmail, String sessionId, Long itemId) {
         Cart cart = getOrCreateCart(userEmail, sessionId);
+
         CartItem cartItem = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Позиция не найдена"));
 
@@ -111,7 +111,8 @@ public class CartService {
             throw new RuntimeException("Доступ запрещен");
         }
 
-        cartItemRepository.delete(cartItem);
+        cart.getItems().removeIf(i -> i.getId().equals(itemId));
+
         return getCart(userEmail, sessionId);
     }
 
@@ -142,6 +143,7 @@ public class CartService {
     public void clearCart(String userEmail, String sessionId) {
         Cart cart = getOrCreateCart(userEmail, sessionId);
         cartItemRepository.deleteByCart(cart);
+        cart.getItems().clear();
     }
 
     private CartItemDto convertToDto(CartItem item) {
