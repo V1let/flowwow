@@ -1,6 +1,11 @@
 package com.example.flowwow.entity;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +32,7 @@ public class Category extends BaseEntity {
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
     // Конструкторы
@@ -43,7 +49,7 @@ public class Category extends BaseEntity {
         this.isActive = isActive;
     }
 
-    // Геттеры и сеттеры
+    // Геттеры и сеттеры (без изменений, просто перечисляем все)
     public Long getId() {
         return id;
     }

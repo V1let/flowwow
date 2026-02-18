@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -18,14 +19,17 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;  // Добавлено
 
-    // Явный конструктор
+    // Обновленный конструктор
     public UserService(UserRepository userRepository,
                        RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       EmailService emailService) {  // Добавлен параметр
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -64,5 +68,41 @@ public class UserService {
     public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+    }
+
+    // ✅ НОВЫЙ МЕТОД: Создание токена для сброса пароля
+    @Transactional
+    public void createPasswordResetToken(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Пользователь с таким email не найден"));
+
+        // Генерируем уникальный токен
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        user.setResetTokenExpiry(LocalDateTime.now().plusHours(24)); // Токен действует 24 часа
+
+        userRepository.save(user);
+
+        // Отправляем email со ссылкой для сброса пароля
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+        emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
+    }
+
+    // ✅ НОВЫЙ МЕТОД: Сброс пароля по токену
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Недействительный токен"));
+
+        if (user.getResetTokenExpiry() == null ||
+                user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Токен истек");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+
+        userRepository.save(user);
     }
 }

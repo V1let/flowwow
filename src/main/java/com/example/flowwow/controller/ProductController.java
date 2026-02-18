@@ -28,8 +28,9 @@ public class ProductController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String search,  // ← НОВЫЙ ПАРАМЕТР
             Pageable pageable) {
-        return ResponseEntity.ok(productService.filterProducts(categoryId, minPrice, maxPrice, pageable));
+        return ResponseEntity.ok(productService.filterProducts(categoryId, minPrice, maxPrice, search, pageable));
     }
 
     @GetMapping("/hits")

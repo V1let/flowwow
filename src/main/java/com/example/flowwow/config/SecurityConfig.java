@@ -23,7 +23,6 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    // Явный конструктор
     public SecurityConfig(UserDetailsServiceImpl userDetailsService,
                           JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.userDetailsService = userDetailsService;
@@ -40,18 +39,25 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/favicon.ico",
-                                "/error"
+                                "/error",
+                                "/api/auth/**",
+                                "/api/products/**",
+                                "/api/categories/**",
+                                "/api/content/**"
                         ).permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/products/**").permitAll()
-                        .requestMatchers("/api/categories/**").permitAll()
-                        .requestMatchers("/api/content/**").permitAll()
-                        // Админские эндпоинты
+                        // Swagger (если нужен)
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/webjars/**",
+                                "/swagger-resources/**"
+                        ).permitAll()
+                        // Админка – только ADMIN
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        // ВСЁ остальное требует авторизации
+                        // Всё остальное – только аутентифицированные
                         .anyRequest().authenticated()
                 )
-                // Настройка анонимных пользователей
                 .anonymous(anonymous -> anonymous
                         .authorities("ROLE_ANONYMOUS")
                 )
@@ -73,4 +79,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+    // ❌ Бин grantedAuthorityDefaults УДАЛЁН – больше не мешает
 }

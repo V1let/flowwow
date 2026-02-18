@@ -1,6 +1,8 @@
 package com.example.flowwow.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,13 +15,13 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, columnDefinition = "varchar(200)")
     private String name;
 
     @Column(unique = true, nullable = false, length = 200)
     private String slug;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "text")
     private String composition;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -50,22 +52,26 @@ public class Product extends BaseEntity {
     private Integer reviewsCount = 0;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<ProductImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Favorite> favorites = new ArrayList<>();
 
     // Конструкторы
     public Product() {
     }
 
-    // Геттеры и сеттеры (сокращено для brevity, добавьте все нужные)
+    // Геттеры и сеттеры (сокращённо, но все нужные)
     public Long getId() {
         return id;
     }
@@ -148,5 +154,61 @@ public class Product extends BaseEntity {
 
     public void setIsNew(Boolean isNew) {
         this.isNew = isNew;
+    }
+
+    public Integer getViewsCount() {
+        return viewsCount;
+    }
+
+    public void setViewsCount(Integer viewsCount) {
+        this.viewsCount = viewsCount;
+    }
+
+    public BigDecimal getRatingAverage() {
+        return ratingAverage;
+    }
+
+    public void setRatingAverage(BigDecimal ratingAverage) {
+        this.ratingAverage = ratingAverage;
+    }
+
+    public Integer getReviewsCount() {
+        return reviewsCount;
+    }
+
+    public void setReviewsCount(Integer reviewsCount) {
+        this.reviewsCount = reviewsCount;
+    }
+
+    public List<ProductImage> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 }

@@ -11,7 +11,6 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    // Явный конструктор
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
@@ -31,6 +30,13 @@ public class CategoryService {
     }
 
     public Category createCategory(Category category) {
+        // Устанавливаем значения по умолчанию
+        if (category.getIsActive() == null) {
+            category.setIsActive(true);
+        }
+        if (category.getSortOrder() == null) {
+            category.setSortOrder(0);
+        }
         category.setSlug(generateSlug(category.getName()));
         return categoryRepository.save(category);
     }

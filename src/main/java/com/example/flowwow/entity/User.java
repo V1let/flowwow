@@ -31,6 +31,17 @@ public class User extends BaseEntity {
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
+    // 🔐 ПОЛЯ ДЛЯ ВОССТАНОВЛЕНИЯ ПАРОЛЯ
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
+    // 🛒 СВЯЗЬ С КОРЗИНОЙ
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
+
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
@@ -40,6 +51,7 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
 
+    // ==================== КОНСТРУКТОРЫ ====================
     public User() {
     }
 
@@ -52,7 +64,9 @@ public class User extends BaseEntity {
         this.isActive = true;
     }
 
-    // Геттеры и сеттеры
+    // ==================== ГЕТТЕРЫ И СЕТТЕРЫ ====================
+
+    // Геттеры и сеттеры для существующих полей
     public Long getId() {
         return id;
     }
@@ -113,6 +127,32 @@ public class User extends BaseEntity {
         this.lastLogin = lastLogin;
     }
 
+    // 🆕 Геттеры и сеттеры для новых полей
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
+
+    // Геттеры и сеттеры для коллекций
     public List<Order> getOrders() {
         return orders;
     }

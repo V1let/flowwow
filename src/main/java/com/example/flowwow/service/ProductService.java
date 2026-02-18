@@ -53,8 +53,12 @@ public class ProductService {
         return productRepository.findByIsNewTrue();
     }
 
-    public Page<Product> filterProducts(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
-        return productRepository.filterProducts(categoryId, minPrice, maxPrice, pageable);
+    public Page<Product> filterProducts(Long categoryId,
+                                        BigDecimal minPrice,
+                                        BigDecimal maxPrice,
+                                        String search,  // ← НОВЫЙ ПАРАМЕТР
+                                        Pageable pageable) {
+        return productRepository.searchProducts(categoryId, minPrice, maxPrice, search, pageable);
     }
 
     @Transactional

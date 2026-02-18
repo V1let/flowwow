@@ -1,6 +1,8 @@
 package com.example.flowwow.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -17,6 +19,7 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
     @Column(name = "product_name", nullable = false, length = 200)

@@ -5,6 +5,8 @@ import com.example.flowwow.dto.order.OrderItemRequest;
 import com.example.flowwow.entity.*;
 import com.example.flowwow.repository.OrderRepository;
 import com.example.flowwow.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,6 +94,11 @@ public class OrderService {
         Order order = getOrderById(id);
         order.setStatus(status);
         return orderRepository.save(order);
+    }
+
+    // ✅ НОВЫЙ МЕТОД: Получение всех заказов с пагинацией (для админа)
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 
     private String generateOrderNumber() {
