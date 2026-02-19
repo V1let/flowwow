@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Избранное | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <!-- Шапка -->
+        <div id="header-placeholder">
+            <div class="loading">Загрузка шапки...</div>
+        </div>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <section class="favorites-section">
+                <div class="container">
+                    <h1 class="page-title">Избранное</h1>
+
+                    <!-- Пустое избранное -->
+                    <div id="favorites-empty" class="text-center" style="padding: 80px 20px; display: none;">
+                        <i class="fas fa-heart" style="font-size: 5rem; color: #ddd; margin-bottom: 20px;"></i>
+                        <h2>В избранном пока пусто</h2>
+                        <p style="margin: 15px 0 30px; color: #666;">
+                            Добавляйте товары, которые вам понравились, чтобы не потерять их
+                        </p>
+                        <a href="../pages/catalog.html" class="btn">Перейти в каталог</a>
+                    </div>
+
+                    <!-- Список избранных товаров -->
+                    <div id="favorites-list" class="product-grid"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Футер -->
+        <div id="footer-placeholder">
+            <div class="loading">Загрузка...</div>
+        </div>
+
+    </div>
+
+    <button class="scroll-top"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="../js/common.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/cart.js" defer></script>  <!-- подключаем тот же файл, где уже есть логика избранного -->
+</body>
+</html>

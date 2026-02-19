@@ -1,0 +1,63 @@
+<header>
+    <div class="container">
+        <div class="header-top">
+            <a href="../pages/index.html" class="logo">
+                <i class="fas fa-spa"></i> Flowwow
+            </a>
+
+            <!-- Десктопное меню -->
+            <nav class="nav-main">
+                <ul>
+                    <li><a href="../pages/index.html">Главная</a></li>
+                    <li><a href="../pages/catalog.html">Букеты</a></li>
+                    <li><a href="../pages/about.html">О нас</a></li>
+                    <li><a href="../pages/order.html">Заказать</a></li>
+                    <li id="desktop-admin-link" style="display: none;"><a href="../other/admin.html">Админ-панель</a></li>
+                </ul>
+            </nav>
+
+            <!-- Кнопка авторизации / аватарка -->
+            <div class="header-icons">
+                <button id="auth-btn" class="auth-btn">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="auth-text" class="auth-text">Войти</span>
+                </button>
+            </div>
+
+            <!-- Бургер хуйня -->
+            <button class="hamburger" id="hamburger" aria-label="Меню">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Мобильное меню (появляется при клике на бургер) -->
+    <div class="mobile-menu" id="mobile-menu">
+        <ul>
+            <li><a href="../pages/index.html">Главная</a></li>
+            <li><a href="../pages/catalog.html">Букеты</a></li>
+            <li><a href="../pages/about.html">О нас</a></li>
+            <li><a href="../pages/order.html">Заказать</a></li>
+            <li id="mobile-admin-menu-item" style="display: none;"><a href="../other/admin.html">Админ-панель</a></li>
+        </ul>
+    </div>
+
+    <!-- Боковое меню пользователя -->
+    <div class="user-sidebar" id="user-sidebar">
+        <div class="user-header">
+            <img id="user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Аватар">
+            <div class="user-info">
+                <h3 id="user-display-name">Пользователь</h3>
+                <p>Личный кабинет</p>
+            </div>
+            <button id="close-user-sidebar" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="user-menu">
+            <li><a href="../pages/cart.html"><i class="fas fa-shopping-cart"></i> Корзина <span id="cart-count-sidebar" class="count">0</span></a></li>
+            <li><a href="../pages/orders.html"><i class="fas fa-list"></i> Мои заказы</a></li>
+            <li><a href="../pages/favorites.html"><i class="fas fa-heart"></i> Избранное</a></li>
+            <li id="admin-panel-menu-item" style="display: none;"><a href="../other/admin.html"><i class="fas fa-shield-alt"></i> Админ-панель</a></li>
+            <li><a href="#" id="user-logout"><i class="fas fa-sign-out-alt"></i> Выйти</a></li>
+        </ul>
+    </div>
+</header>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .order-submit-section {
+            padding: 40px 0;
+        }
+        .order-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .order-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .order-items {
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .order-item-img {
+            width: 60px;
+            height: 60px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+        .order-item-info {
+            flex: 1;
+        }
+        .order-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 20px 0;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+        @media (max-width: 768px) {
+            .order-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder">
+        <div class="loading">Загрузка шапки...</div>
+    </div>
+
+    <section class="order-submit-section">
+        <div class="container">
+            <h1 class="page-title">Оформление заказа</h1>
+
+            <div class="order-grid">
+                <!-- Форма заказа -->
+                <div class="order-form">
+                    <h2>Данные получателя</h2>
+                    <form id="order-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customer-name">Имя *</label>
+                                <input type="text" id="customer-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customer-phone">Телефон *</label>
+                                <input type="tel" id="customer-phone" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="customer-email">Email *</label>
+                            <input type="email" id="customer-email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delivery-address">Адрес доставки *</label>
+                            <textarea id="delivery-address" required placeholder="Улица, дом, квартира, подъезд, этаж..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="delivery-date">Дата доставки *</label>
+                                <input type="date" id="delivery-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery-time">Время доставки</label>
+                                <select id="delivery-time">
+                                    <option value="">Не указано</option>
+                                    <option value="morning">Утро (9:00-12:00)</option>
+                                    <option value="afternoon">День (12:00-18:00)</option>
+                                    <option value="evening">Вечер (18:00-21:00)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment">Комментарий к заказу</label>
+                            <textarea id="comment" placeholder="Пожелания к букету, время звонка и т.д."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-block">Оформить заказ</button>
+                    </form>
+                </div>
+
+                <!-- Сводка заказа -->
+                <div class="order-summary">
+                    <h2>Ваш заказ</h2>
+                    <div class="order-items" id="order-items">
+                        <p>Загрузка...</p>
+                    </div>
+                    <div class="order-total">
+                        Итого: <span id="order-total">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder">
+        <div class="loading">Загрузка...</div>
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/order-submit.js" defer></script>
+</body>
+</html>

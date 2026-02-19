@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css?v=6">
+    <style>
+        .admin-body {
+            background:
+                radial-gradient(circle at 8% 10%, rgba(232, 62, 140, 0.12), transparent 42%),
+                radial-gradient(circle at 92% 0%, rgba(232, 62, 140, 0.08), transparent 40%),
+                var(--light-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-color);
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .admin-sidebar {
+            width: 260px;
+            background: rgba(255, 255, 255, 0.96);
+            color: var(--dark-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid #f4d8e6;
+            box-shadow: 8px 0 28px rgba(232, 62, 140, 0.08);
+            transition: transform 0.3s ease;
+            z-index: 1200;
+        }
+
+        .admin-sidebar.active {
+            transform: translateX(0);
+        }
+
+        .admin-logo {
+            padding: 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-bottom: 1px solid #f4d8e6;
+            background: linear-gradient(180deg, #fff, #fff7fb);
+        }
+
+        .admin-logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .admin-nav {
+            padding: 14px 0;
+        }
+
+        .admin-nav a {
+            display: block;
+            padding: 13px 18px;
+            margin: 4px 10px;
+            color: #5e4a56;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: #ffe8f3;
+            color: var(--primary-color);
+            box-shadow: 0 6px 14px rgba(232, 62, 140, 0.16);
+        }
+
+        .admin-nav a i {
+            width: 25px;
+            margin-right: 8px;
+        }
+
+        .admin-main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .admin-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 14px;
+            border: 1px solid #f5ddea;
+            box-shadow: 0 10px 24px rgba(232, 62, 140, 0.08);
+            margin-bottom: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 10px;
+            z-index: 900;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .admin-header .hamburger {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+            display: none;
+            position: relative;
+            z-index: 1301;
+        }
+
+        .admin-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(34, 18, 27, 0.42);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 1100;
+        }
+
+        .admin-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-section h2 {
+            color: #5b2f47;
+            margin-bottom: 24px;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+            margin-bottom: 26px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid #f4dce8;
+            box-shadow: 0 10px 22px rgba(232, 62, 140, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-card i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card h3 {
+            margin: 0 0 4px 0;
+            font-size: 1.9rem;
+            color: #5b2f47;
+        }
+
+        .stat-card p {
+            margin: 0;
+            color: #846a78;
+            font-size: 0.9rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            min-width: 720px;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #f4dce8;
+            box-shadow: 0 10px 22px rgba(232, 62, 140, 0.08);
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #f8eaf1;
+        }
+
+        .admin-table th {
+            background: linear-gradient(90deg, var(--primary-color), #f06aa8);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .admin-table tr:hover {
+            background: #fff5fa;
+        }
+
+        .admin-table select {
+            padding: 8px 12px;
+            border: 1px solid #efcde0;
+            border-radius: 7px;
+            background: #fff;
+            color: #5b2f47;
+            cursor: pointer;
+        }
+
+        .btn-small {
+            padding: 7px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--primary-color);
+            color: #fff;
+            margin-right: 5px;
+            transition: var(--transition);
+        }
+
+        .btn-small:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-small.btn-danger {
+            background: #d9534f;
+        }
+
+        .btn-small.btn-danger:hover {
+            background: #c9302c;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid #f4dce8;
+            margin-top: 18px;
+            border-radius: 12px;
+            box-shadow: 0 8px 18px rgba(232, 62, 140, 0.08);
+            flex-wrap: wrap;
+        }
+
+        #admin-products-table,
+        #archived-products-table,
+        #admin-orders-table,
+        #admin-users-table,
+        #admin-categories-table,
+        #admin-reviews-table,
+        #orders-by-status,
+        #popular-products {
+            overflow-x: auto;
+        }
+
+        .pagination button {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            background: var(--primary-color);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .pagination button:disabled {
+            background: #e4d7dd;
+            color: #9b8993;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                width: min(86vw, 320px);
+                z-index: 1200;
+            }
+
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-left: 0;
+                padding: 14px;
+            }
+
+            .admin-header .hamburger {
+                display: block;
+            }
+
+            .admin-header {
+                top: 0;
+                padding: 14px 16px;
+            }
+
+            .admin-header h1 {
+                font-size: 1.25rem;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-section > div[style*="display: grid"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            .admin-table {
+                font-size: 0.85rem;
+                min-width: 640px;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body class="admin-body">
+
+    <div class="admin-layout">
+        <!-- Боковое меню -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-spa"></i> Flowwow Admin
+            </div>
+            <nav class="admin-nav">
+                <a href="#dashboard" class="active"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#products"><i class="fas fa-box"></i> Букеты</a>
+                <a href="#categories"><i class="fas fa-tags"></i> Категории</a>
+                <a href="#archive"><i class="fas fa-box-archive"></i> Архив товаров</a>
+                <a href="#orders"><i class="fas fa-shopping-cart"></i> Заказы</a>
+                <a href="#users"><i class="fas fa-users"></i> Пользователи</a>
+                <a href="#reviews"><i class="fas fa-star"></i> Отзывы</a>
+                <a href="../pages/index.html"><i class="fas fa-globe"></i> Основной сайт</a>
+                <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </nav>
+        </aside>
+        <div class="admin-overlay" id="admin-overlay"></div>
+
+        <!-- Основной контент -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <button class="hamburger"><i class="fas fa-bars"></i></button>
+                <h1>Панель управления</h1>
+            </header>
+
+            <!-- ДАШБОРД -->
+            <section id="dashboard" class="admin-section active">
+                <h2>Добро пожаловать, Администратор</h2>
+                
+                <div class="admin-stats" id="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-box-open"></i>
+                        <div>
+                            <h3 id="stat-products">0</h3>
+                            <p>Букетов в каталоге</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-bag"></i>
+                        <div>
+                            <h3 id="stat-orders">0</h3>
+                            <p>Заказов всего</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h3 id="stat-users">0</h3>
+                            <p>Пользователей</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-ruble-sign"></i>
+                        <div>
+                            <h3 id="stat-revenue">0 ₽</h3>
+                            <p>Общая выручка</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                    <div id="orders-by-status" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3>Заказы по статусам</h3>
+                        <p>Загрузка...</p>
+                    </div>
+                    <div id="popular-products" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3>Популярные товары</h3>
+                        <p>Загрузка...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ТОВАРЫ -->
+            <section id="products" class="admin-section">
+                <h2>Управление букетами</h2>
+                <div style="margin-bottom: 20px;">
+                    <button class="btn-small" onclick="createNewProduct()">+ Добавить букет</button>
+                </div>
+                <div id="admin-products-table">
+                    <p>Загрузка товаров...</p>
+                </div>
+            </section>
+
+            <!-- КАТЕГОРИИ -->
+            <section id="categories" class="admin-section">
+                <h2>Управление категориями</h2>
+                <form id="category-form" style="background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <input type="hidden" id="category-id">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                        <input id="category-name" type="text" placeholder="Название категории" required style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <input id="category-sort-order" type="number" min="0" placeholder="Порядок сортировки" value="0" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 10px;">
+                            <input id="category-is-active" type="checkbox" checked> Активна
+                        </label>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <textarea id="category-description" placeholder="Описание (необязательно)" style="width: 100%; min-height: 90px; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <input id="category-image-path" type="url" placeholder="URL изображения категории (необязательно)" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-small">Сохранить категорию</button>
+                        <button type="button" class="btn-small" id="category-cancel-btn" style="background: #7f8c8d;">Сбросить</button>
+                    </div>
+                </form>
+                <div id="admin-categories-table">
+                    <p>Загрузка категорий...</p>
+                </div>
+            </section>
+
+            <!-- АРХИВ ТОВАРОВ -->
+            <section id="archive" class="admin-section">
+                <h2>Архив товаров</h2>
+                <div id="archived-products-table">
+                    <p>Загрузка архива...</p>
+                </div>
+            </section>
+
+            <!-- ЗАКАЗЫ -->
+            <section id="orders" class="admin-section">
+                <h2>Управление заказами</h2>
+                <div id="admin-orders-table">
+                    <p>Загрузка заказов...</p>
+                </div>
+                <div id="orders-pagination"></div>
+            </section>
+
+            <!-- ПОЛЬЗОВАТЕЛИ -->
+            <section id="users" class="admin-section">
+                <h2>Пользователи</h2>
+                <div id="admin-users-table">
+                    <p>Загрузка пользователей...</p>
+                </div>
+                <div id="users-pagination"></div>
+            </section>
+
+            <!-- ОТЗЫВЫ -->
+            <section id="reviews" class="admin-section">
+                <h2>Модерация отзывов</h2>
+                <div id="admin-reviews-table">
+                    <p>Загрузка отзывов...</p>
+                </div>
+                <div id="reviews-pagination"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../js/common.js?v=10" defer></script>
+    <script src="../js/admin.js?v=10" defer></script>
+</body>
+</html>

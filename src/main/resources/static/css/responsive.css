@@ -1,0 +1,283 @@
+/* ===== responsive.css ===== */
+/* Все медиа-запросы */
+
+@media (max-width: 992px) {
+    .nav-main ul {
+        gap: 15px;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .map-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .map-info {
+        order: 2;
+    }
+
+    .map-wrapper {
+        order: 1;
+        height: 400px;
+    }
+
+    .admin-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .admin-sidebar.active {
+        transform: translateX(0);
+    }
+
+    .admin-main {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav-main {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .header-icons {
+        margin-left: auto;
+    }
+
+    .hero {
+        min-height: 60vh;
+    }
+
+    .hero h1 {
+        font-size: 2.4rem;
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+    }
+
+    .slide .container {
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .slider-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .prev {
+        left: 10px;
+    }
+
+    .next {
+        right: 10px;
+    }
+
+    .testimonial-btn.prev {
+        left: 0;
+    }
+
+    .testimonial-btn.next {
+        right: 0;
+    }
+
+    .about-content {
+        flex-direction: column;
+    }
+
+    .about-img,
+    .about-text {
+        width: 100%;
+    }
+
+    .order-section,
+    .bouquet-examples,
+    .contacts,
+    .popular,
+    .categories,
+    .features,
+    .testimonials,
+    .blog-preview,
+    .about-page,
+    .team,
+    .map-section,
+    .catalog-header,
+    .category-header,
+    .auth-section {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .catalog-title,
+    .category-header h1 {
+        font-size: 2rem;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .step {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .step-number {
+        margin: 0 auto;
+    }
+
+    .newsletter-box {
+        padding: 30px 20px;
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+    }
+
+    .newsletter-form input,
+    .newsletter-form button {
+        width: 100%;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        min-height: 55vh;
+    }
+
+    .slide {
+        background-position: center 30%;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+
+    .product-grid,
+    .category-grid,
+    .features-grid,
+    .blog-grid,
+    .team-grid,
+    .benefits-grid,
+    .contacts-grid,
+    .bouquet-grid,
+    .order-steps {
+        grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-tabs {
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-tab {
+        white-space: nowrap;
+    }
+
+    .sort-options {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .custom-select-wrapper {
+        flex: 1;
+        min-width: unset;
+    }
+
+    .custom-select {
+        padding-right: 36px;
+    }
+
+    .custom-select-wrapper::after {
+        right: 12px;
+    }
+
+    .modal-body {
+        padding: 30px 20px;
+    }
+
+    .scroll-top {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .map-section {
+        padding: 40px 0 60px;
+    }
+
+    .map-info h2 {
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+    }
+
+    .contact-item {
+        gap: 15px;
+    }
+
+    .contact-item i {
+        font-size: 1.3rem;
+    }
+
+    .cart-item {
+        flex-wrap: wrap;
+    }
+}
+
+/* Оптимизация для очень маленьких экранов */
+@media (max-width: 375px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .btn {
+        padding: 10px 24px;
+    }
+
+    .product-img {
+        height: 200px;
+    }
+}
+
+/* Портретная ориентация на планшетах */
+@media (min-width: 768px) and (max-width: 992px) and (orientation: portrait) {
+    .hero {
+        min-height: 50vh;
+    }
+}

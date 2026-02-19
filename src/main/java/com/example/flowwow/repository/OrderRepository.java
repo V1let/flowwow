@@ -1,0 +1,35 @@
+package com.example.flowwow.repository;
+
+import com.example.flowwow.entity.Order;
+import com.example.flowwow.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    List<Order> findByUserOrderByCreatedAtDesc(User user);
+    Page<Order> findByStatus(String status, Pageable pageable);
+
+    @Query("SELECT o FROM Order o WHERE o.deliveryDate = :date")
+    List<Order> findByDeliveryDate(@Param("date") LocalDate date);
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status = 'DELIVERED'")
+    BigDecimal getTotalRevenue();
+
+    Long countByStatus(String status);
+
+    @Query("SELECT p.id, p.name, COUNT(oi) as orderCount " +
+            "FROM OrderItem oi " +
+            "JOIN oi.product p " +
+            "GROUP BY p.id, p.name " +
+            "ORDER BY orderCount DESC")
+    List<Object[]> findPopularProducts();
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Категория букетов | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div id="header-placeholder">
+        <div class="loading">Загрузка шапки...</div>
+    </div>
+
+    <!-- Хлебные крошки -->
+    <section class="breadcrumbs">
+        <div class="container">
+            <ul>
+                <li><a href="../pages/index.html">Главная</a></li>
+                <li><a href="../pages/catalog.html">Букеты</a></li>
+                <li id="current-category">Категория</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Заголовок категории -->
+    <section class="category-header">
+        <div class="container">
+            <h1 id="category-title">Категория букетов</h1>
+            <p id="category-description">Описание категории</p>
+        </div>
+    </section>
+
+    <!-- Букеты категории -->
+    <section class="category-products">
+        <div class="container">
+            <div class="product-grid" id="products-container">
+                <!-- Букеты будут загружены через JS -->
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder">
+        <div class="loading">Загрузка подвала...</div>
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/script.js" defer></script>
+    <script src="../js/cart.js" defer></script>
+    <script src="../js/category.js" defer></script>
+</body>
+</html>

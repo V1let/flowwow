@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div class="site-wrapper">
+
+        <div id="header-placeholder"><div class="loading">Загрузка...</div></div>
+
+        <main class="main-content">
+            <section class="cart-section">
+                <div class="container">
+                    <h1 class="page-title">Корзина</h1>
+
+                    <!-- Пустая корзина -->
+                    <div id="cart-empty" class="text-center" style="padding: 80px 20px; display: none;">
+                        <i class="fas fa-shopping-cart" style="font-size: 5rem; color: #ddd; margin-bottom: 20px;"></i>
+                        <h2>Ваша корзина пуста</h2>
+                        <p style="margin: 15px 0 30px; color: #666;">
+                            Добавьте товары из каталога, чтобы оформить заказ
+                        </p>
+                        <a href="../pages/catalog.html" class="btn">Перейти в каталог</a>
+                    </div>
+
+                    <!-- Список товаров -->
+                    <div id="cart-items" class="cart-grid"></div>
+
+                    <!-- Итого -->
+                    <div class="cart-total" id="cart-summary" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0;">
+                            <h3 style="margin: 0;">Итого:</h3>
+                            <h2 style="margin: 0; color: var(--primary-color);">
+                                <span id="total-price">0</span> ₽
+                            </h2>
+                        </div>
+                        <a href="../pages/order-submit.html" class="btn btn-block" style="max-width: 400px; margin: 0 auto; font-size: 1.2rem; display: block; text-align: center;">
+                            Оформить заказ
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div id="footer-placeholder"><div class="loading">Загрузка...</div></div>
+
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/cart.js" defer></script>   <!-- ← обязательно подключить -->
+</body>
+</html>

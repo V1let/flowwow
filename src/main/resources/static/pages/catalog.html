@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowwow - Каталог букетов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+<body>
+
+    <div id="header-placeholder">
+        <div class="loading">Загрузка шапки...</div>
+    </div>
+
+    <main>
+      <section class="catalog-header bg-light-pink">
+        <div class="container">
+          <h1 class="catalog-title">Каталог букетов</h1>
+          <p class="catalog-subtitle">
+            Выберите идеальный букет для любого случая - от романтического свидания до торжественного мероприятия
+          </p>
+        </div>
+      </section>
+      
+      <section class="catalog-filters">
+          <div class="container">
+             <div class="filter-tabs">
+                  <a href="#" class="filter-tab active" data-category="all">Все букеты</a>
+                  <a href="#" class="filter-tab" data-category="romantic">Романтические</a>
+                 <a href="#" class="filter-tab" data-category="wedding">Свадебные</a>
+                  <a href="#" class="filter-tab" data-category="spring">Весенние</a>
+                  <a href="#" class="filter-tab" data-category="birthday">День рождения</a>
+              </div>
+
+              <div class="catalog-controls" style="margin-top:20px; display:flex; gap:20px; flex-wrap:wrap; justify-content:space-between;">
+                  <input type="text" id="search-input" placeholder="Поиск по названию или описанию..." style="padding:10px 16px; border-radius:30px; border:1px solid #ddd; min-width:220px;">
+            
+                <div class="sort-options">
+                    <label for="sort-select">Сортировать:</label>
+                    <div class="custom-select-wrapper">
+                        <select id="sort-select" class="custom-select">
+                            <option value="popular" selected>По популярности</option>
+                            <option value="price-asc">Цена: по возрастанию</option>
+                            <option value="price-desc">Цена: по убыванию</option>
+                            <option value="rating">По рейтингу</option>
+                        </select>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </section>
+
+      <section class="catalog-products">
+          <div class="container">
+              <div class="product-grid">
+                  <!-- карточки будут добавлены через JavaScript -->
+              </div>
+          </div>
+      </section>
+
+      <section class="catalog-cta bg-soft-green">
+        <div class="container">
+          <h2>Не нашли нужный букет?</h2>
+          <p>Мы создадим индивидуальную композицию специально для вас</p>
+          <a href="tel:+79991234567" class="btn">Позвонить флористу</a>
+        </div>
+      </section>
+    </main>
+
+    <div id="footer-placeholder">
+        <div class="loading">Загрузка подвала...</div>
+    </div>
+
+    <script src="../js/data.js" defer></script>
+    <script src="../js/common.js" defer></script>
+    <script src="../js/api.js" defer></script>
+    <script src="../js/catalog.js" defer></script>
+    <script src="../js/script.js" defer></script>
+    <script src="../js/cart.js" defer></script>
+</body>
+</html>

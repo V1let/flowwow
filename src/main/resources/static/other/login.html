@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        .auth-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+        .auth-form {
+            display: block;
+        }
+        .auth-form.hidden {
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .auth-links {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .auth-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"><div class="loading">Загрузка...</div></div>
+
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-card">
+                <h1 class="page-title">Flowwow</h1>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Вход</button>
+                    <button class="auth-tab" data-tab="register">Регистрация</button>
+                </div>
+
+                <!-- Форма входа -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="example@mail.ru" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-block">Войти</button>
+
+                    <div class="auth-links">
+                        <a href="forgot-password.html">Забыли пароль?</a>
+                    </div>
+
+                    <p id="login-error-msg" class="error hidden"></p>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form id="register-form" class="auth-form hidden">
+                    <div class="form-group">
+                        <label for="register-name">Имя</label>
+                        <input type="text" id="register-name" placeholder="Иван Иванов" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" placeholder="example@mail.ru" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-phone">Телефон</label>
+                        <input type="tel" id="register-phone" placeholder="+7 (999) 000-00-00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-password">Пароль</label>
+                        <input type="password" id="register-password" placeholder="••••••••" minlength="6" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="register-confirm">Подтверждение пароля</label>
+                        <input type="password" id="register-confirm" placeholder="••••••••" minlength="6" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-block">Зарегистрироваться</button>
+
+                    <p id="register-error-msg" class="error hidden"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"><div class="loading">Загрузка...</div></div>
+
+    <script src="../js/common.js" defer></script>
+    <script src="../js/auth.js" defer></script>
+    <script src="../js/script.js"></script>
+</body>
+</html>

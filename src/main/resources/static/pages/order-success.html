@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ оформлен | Flowwow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div id="header-placeholder">
+        <div class="loading">Загрузка шапки...</div>
+    </div>
+
+    <section class="order-submit-section">
+        <div class="container" style="max-width: 820px;">
+            <div class="order-summary" style="margin: 40px auto; text-align: center;">
+                <i class="fas fa-check-circle" style="font-size: 64px; color: #2bb673;"></i>
+                <h1 style="margin-top: 20px;">Спасибо! Заказ оформлен</h1>
+                <p style="margin: 10px 0 0; color: #666;">
+                    Номер вашего заказа: <strong id="order-id">—</strong>
+                </p>
+                <div style="margin-top: 24px;">
+                    <a class="btn" href="../pages/catalog.html">Продолжить покупки</a>
+                    <a class="btn btn-outline" href="../pages/index.html" style="margin-left: 10px;">На главную</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder">
+        <div class="loading">Загрузка подвала...</div>
+    </div>
+
+    <script src="../js/common.js" defer></script>
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            if (id) {
+                document.getElementById('order-id').textContent = id;
+            }
+        })();
+    </script>
+</body>
+</html>
