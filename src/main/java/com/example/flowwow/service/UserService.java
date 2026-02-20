@@ -35,6 +35,8 @@ public class UserService {
 
     @Transactional
     public User register(RegisterRequest request) {
+        validateRegisterRequest(request);
+
         String normalizedEmail = normalizeEmail(request.getEmail());
         if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
             throw new RuntimeException("Пользователь с таким email уже существует");
@@ -126,5 +128,39 @@ public class UserService {
 
     private String normalizeEmail(String email) {
         return email == null ? "" : email.trim().toLowerCase();
+    }
+
+    private void validateRegisterRequest(RegisterRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("Данные регистрации обязательны");
+        }
+
+        String name = request.getName();
+        if (name == null || name.trim().length() < 2 || name.trim().length() > 100) {
+            throw new IllegalArgumentException("Имя должно быть от 2 до 100 символов");
+        }
+
+        String email = request.getEmail();
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email обязателен");
+        }
+        String normalizedEmail = email.trim();
+        if (!normalizedEmail.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$") || normalizedEmail.length() > 100) {
+            throw new IllegalArgumentException("Некорректный email");
+        }
+
+        String phone = request.getPhone();
+        if (phone == null || phone.trim().isEmpty()) {
+            throw new IllegalArgumentException("Телефон обязателен");
+        }
+        String normalizedPhone = phone.trim();
+        if (!normalizedPhone.matches("^[0-9+\\-()\\s]{7,20}$")) {
+            throw new IllegalArgumentException("Некорректный формат телефона");
+        }
+
+        String password = request.getPassword();
+        if (password == null || password.trim().length() < 6 || password.trim().length() > 100) {
+            throw new IllegalArgumentException("Пароль должен быть от 6 до 100 символов");
+        }
     }
 }

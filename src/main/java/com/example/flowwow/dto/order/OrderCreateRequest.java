@@ -1,16 +1,42 @@
 package com.example.flowwow.dto.order;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class OrderCreateRequest {
+    @NotBlank(message = "Имя клиента обязательно")
+    @Size(min = 2, max = 100, message = "Имя клиента должно быть от 2 до 100 символов")
     private String customerName;
+
+    @NotBlank(message = "Телефон обязателен")
+    @Size(min = 7, max = 20, message = "Телефон должен быть от 7 до 20 символов")
     private String customerPhone;
+
+    @Email(message = "Некорректный email")
     private String customerEmail;
+
+    @NotBlank(message = "Адрес доставки обязателен")
+    @Size(min = 5, max = 500, message = "Адрес доставки должен быть от 5 до 500 символов")
     private String deliveryAddress;
+
+    @NotNull(message = "Дата доставки обязательна")
     private LocalDate deliveryDate;
+
+    @NotBlank(message = "Время доставки обязательно")
+    @Size(max = 20, message = "Время доставки не должно превышать 20 символов")
     private String deliveryTime;
+
+    @Size(max = 1000, message = "Комментарий не должен превышать 1000 символов")
     private String comment;
+
+    @NotNull(message = "Список товаров обязателен")
+    @Valid
     private List<OrderItemRequest> items;
 
     // Конструкторы

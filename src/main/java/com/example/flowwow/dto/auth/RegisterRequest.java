@@ -1,9 +1,25 @@
 package com.example.flowwow.dto.auth;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 public class RegisterRequest {
+    @NotBlank(message = "Имя обязательно")
+    @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов")
     private String name;
+
+    @NotBlank(message = "Email обязателен")
+    @Email(message = "Некорректный email")
     private String email;
+
+    @NotBlank(message = "Телефон обязателен")
+    @Pattern(regexp = "^[0-9+\\-()\\s]{7,20}$", message = "Некорректный формат телефона")
     private String phone;
+
+    @NotBlank(message = "Пароль обязателен")
+    @Size(min = 6, max = 100, message = "Пароль должен быть от 6 до 100 символов")
     private String password;
 
     public RegisterRequest() {

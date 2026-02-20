@@ -1,0 +1,12 @@
+{
+  "name": "flowwow-frontend-build",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  },
+  "scripts": {
+    "build:frontend": "esbuild src/main/resources/static/js/entry/*.js --bundle --minify --format=iife --outdir=src/main/resources/static/dist/js",
+    "build:css": "esbuild src/main/resources/static/css/style.css --bundle --minify --outdir=src/main/resources/static/dist/css",
+    "build": "npm run build:frontend && npm run build:css"
+  }
+}

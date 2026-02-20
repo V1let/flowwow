@@ -61,9 +61,7 @@ public class ProductService {
     }
 
     public List<Product> getAllProductsForAdmin() {
-        return productRepository.findAll().stream()
-                .filter(product -> !isArchived(product))
-                .toList();
+        return productRepository.findNotArchived();
     }
 
     public List<Product> getArchivedProductsForAdmin() {
@@ -81,15 +79,11 @@ public class ProductService {
     }
 
     public List<Product> getHits() {
-        return productRepository.findByIsHitTrue().stream()
-                .filter(product -> !isArchived(product))
-                .toList();
+        return productRepository.findActiveHits();
     }
 
     public List<Product> getNewProducts() {
-        return productRepository.findByIsNewTrue().stream()
-                .filter(product -> !isArchived(product))
-                .toList();
+        return productRepository.findActiveNew();
     }
 
     public Page<Product> filterProducts(Long categoryId,

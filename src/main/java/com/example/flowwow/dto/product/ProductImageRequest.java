@@ -1,7 +1,13 @@
 package com.example.flowwow.dto.product;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class ProductImageRequest {
+    @NotBlank(message = "Путь к изображению обязателен")
+    @Size(max = 500, message = "Путь к изображению не должен превышать 500 символов")
     private String imagePath;
+
     private Boolean isMain;
     private Integer sortOrder;
 

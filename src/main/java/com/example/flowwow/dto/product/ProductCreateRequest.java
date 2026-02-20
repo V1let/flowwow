@@ -1,17 +1,39 @@
 package com.example.flowwow.dto.product;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 public class ProductCreateRequest {
+    @NotBlank(message = "Название обязательно")
+    @Size(min = 2, max = 200, message = "Название должно быть от 2 до 200 символов")
     private String name;
+
+    @NotNull(message = "Категория обязательна")
     private Long categoryId;
+
+    @NotBlank(message = "Состав обязателен")
+    @Size(min = 2, max = 500, message = "Состав должен быть от 2 до 500 символов")
     private String composition;
+
+    @NotNull(message = "Цена обязательна")
+    @DecimalMin(value = "0.01", message = "Цена должна быть больше 0")
     private BigDecimal price;
+
     private BigDecimal oldPrice;
+
+    @Size(max = 2000, message = "Описание не должно превышать 2000 символов")
     private String description;
+
     private Boolean isHit = false;
     private Boolean isNew = false;
+
+    @Valid
     private List<ProductImageRequest> images;
 
     // Конструкторы

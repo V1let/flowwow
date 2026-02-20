@@ -130,11 +130,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const isOtherPage = window.location.pathname.includes('/other/');
     const basePath = isOtherPage ? '../' : '../';
 
+    const headerCacheKey = `fw_header_${INCLUDE_VERSION}`;
+    const footerCacheKey = `fw_footer_${INCLUDE_VERSION}`;
+    const cachedHeader = sessionStorage.getItem(headerCacheKey);
+    const cachedFooter = sessionStorage.getItem(footerCacheKey);
+
+    if (cachedHeader && cachedFooter) {
+        headerPlaceholder.innerHTML = cachedHeader;
+        footerPlaceholder.innerHTML = cachedFooter;
+    }
+
     Promise.all([
-        fetch(`${basePath}includes/header.html?v=${INCLUDE_VERSION}`).then(r => r.text()),
-        fetch(`${basePath}includes/footer.html?v=${INCLUDE_VERSION}`).then(r => r.text())
+        cachedHeader ? Promise.resolve(cachedHeader) : fetch(`${basePath}includes/header.html?v=${INCLUDE_VERSION}`).then(r => r.text()),
+        cachedFooter ? Promise.resolve(cachedFooter) : fetch(`${basePath}includes/footer.html?v=${INCLUDE_VERSION}`).then(r => r.text())
     ])
     .then(([headerHtml, footerHtml]) => {
+        if (!cachedHeader) sessionStorage.setItem(headerCacheKey, headerHtml);
+        if (!cachedFooter) sessionStorage.setItem(footerCacheKey, footerHtml);
+
         headerPlaceholder.innerHTML = headerHtml;
         footerPlaceholder.innerHTML = footerHtml;
 

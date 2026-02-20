@@ -20,6 +20,7 @@ public class ProductImage extends BaseEntity {
     @Column(name = "image_data", columnDefinition = "bytea")
     @JdbcTypeCode(SqlTypes.BINARY)
     @JsonIgnore
+    @Basic(fetch = FetchType.LAZY)
     private byte[] imageData;
 
     @Column(name = "content_type", length = 100)
