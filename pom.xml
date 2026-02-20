@@ -57,6 +57,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <!-- Devtools for hot reload during development -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
