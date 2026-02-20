@@ -26,6 +26,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByIsNewTrue();
 
+    long countByCategoryId(Long categoryId);
+
     @Query("SELECT p FROM Product p WHERE "
             + "p.slug NOT LIKE 'deleted-%' AND "
             + "(:categoryId IS NULL OR p.category.id = :categoryId) AND "

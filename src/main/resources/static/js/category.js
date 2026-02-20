@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Загрузка товаров этой категории
-        const data = await api.getProducts({ categoryId: categoryId || category?.id });
+        const data = await api.getProducts({ categoryId: categoryId || category?.id, page: 0, size: 200 });
         products = data.content || data;
 
         renderProducts(products);

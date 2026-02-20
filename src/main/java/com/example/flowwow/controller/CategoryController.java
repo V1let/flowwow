@@ -49,7 +49,11 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategory(id);
-        return ResponseEntity.ok().build();
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalStateException ex) {
+            return ResponseEntity.status(409).body(ex.getMessage());
+        }
     }
 }

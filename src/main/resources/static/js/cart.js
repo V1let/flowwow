@@ -258,6 +258,7 @@ async function renderFavorites() {
         const productImage = window.resolveAssetUrl ? window.resolveAssetUrl(productImageRaw) : productImageRaw;
 
         if (!productId) return;
+        card.dataset.id = productId;
 
         card.innerHTML = `
             <div class="product-img" style="background-image: url('${productImage}')">
@@ -280,6 +281,12 @@ async function renderFavorites() {
             </div>
         `;
         listEl.appendChild(card);
+
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.add-to-cart') || e.target.closest('.wishlist-btn')) return;
+            const id = card.dataset.id;
+            if (id) window.location.href = `product.html?id=${id}`;
+        });
     });
 
     listEl.style.display = 'grid';

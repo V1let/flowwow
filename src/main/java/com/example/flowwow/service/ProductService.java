@@ -22,11 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ProductService {
     private static final String ARCHIVED_SLUG_PREFIX = "deleted-";
     private static final Set<String> FINAL_ORDER_STATUSES = Set.of("DELIVERED", "COMPLETED", "CANCELLED");
+    private static final Pattern IMAGE_ID_PATTERN = Pattern.compile(".*/api/images/(\\d+)$");
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -292,7 +295,7 @@ public class ProductService {
     private void applyImages(Product product, List<ProductImageRequest> images) {
         if (images == null) return;
 
-        product.getImages().clear();
+        List<ProductImage> newImages = new java.util.ArrayList<>();
 
         boolean hasMain = images.stream().anyMatch(i -> Boolean.TRUE.equals(i.getIsMain()));
         for (int i = 0; i < images.size(); i++) {
@@ -301,13 +304,30 @@ public class ProductService {
                 continue;
             }
 
-            ProductImage img = new ProductImage();
+            String path = req.getImagePath().trim();
+            ProductImage img = resolveExistingImage(path);
+            if (img == null) {
+                img = new ProductImage();
+                img.setImagePath(path);
+            }
             img.setProduct(product);
-            img.setImagePath(req.getImagePath().trim());
             img.setIsMain(hasMain ? Boolean.TRUE.equals(req.getIsMain()) : i == 0);
             img.setSortOrder(req.getSortOrder() != null ? req.getSortOrder() : i);
+            newImages.add(img);
+        }
+        product.getImages().clear();
+        product.getImages().addAll(newImages);
+    }
 
-            product.getImages().add(img);
+    private ProductImage resolveExistingImage(String imagePath) {
+        if (imagePath == null) return null;
+        Matcher matcher = IMAGE_ID_PATTERN.matcher(imagePath);
+        if (!matcher.matches()) return null;
+        try {
+            Long id = Long.valueOf(matcher.group(1));
+            return productImageRepository.findById(id).orElse(null);
+        } catch (NumberFormatException ex) {
+            return null;
         }
     }
 

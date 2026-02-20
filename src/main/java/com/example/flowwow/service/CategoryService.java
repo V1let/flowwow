@@ -2,17 +2,23 @@ package com.example.flowwow.service;
 
 import com.example.flowwow.entity.Category;
 import com.example.flowwow.repository.CategoryRepository;
+import com.example.flowwow.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class CategoryService {
+    private static final String ARCHIVED_SLUG_PREFIX = "deleted-";
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository,
+                           ProductRepository productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Category> getAllActiveCategories() {
@@ -55,7 +61,21 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
+    @Transactional
     public void deleteCategory(Long id) {
+        var products = productRepository.findByCategoryId(id);
+        if (products != null && !products.isEmpty()) {
+            var hasActive = products.stream()
+                    .anyMatch(p -> p.getSlug() == null || !p.getSlug().startsWith(ARCHIVED_SLUG_PREFIX));
+            if (hasActive) {
+                throw new IllegalStateException("Нельзя удалить категорию с активными товарами. Сначала удалите или перенесите товары.");
+            }
+
+            // только архивные товары — отвязываем категорию
+            products.forEach(p -> p.setCategory(null));
+            productRepository.saveAll(products);
+        }
+
         categoryRepository.deleteById(id);
     }
 

@@ -220,13 +220,23 @@ async function saveProduct(e) {
             await api.updateProduct(productId, productData);
             showToast('Товар обновлён', 'success');
         } else {
-            await api.createProduct(productData);
+            const created = await api.createProduct(productData);
             showToast('Товар создан', 'success');
+
+            // Переходим в режим редактирования без перезагрузки
+            productId = created?.id || productId;
+            if (productId) {
+                isEditMode = true;
+                document.getElementById('page-title').textContent = 'Редактирование товара';
+                const deleteBtn = document.getElementById('delete-btn');
+                if (deleteBtn) deleteBtn.style.display = 'block';
+                const url = new URL(window.location.href);
+                url.searchParams.set('id', productId);
+                window.history.replaceState({}, '', url.toString());
+            }
         }
-        
-        setTimeout(() => {
-            window.location.href = 'admin.html#products';
-        }, 1000);
+
+        // Остаёмся на странице редактирования после сохранения
         
     } catch (error) {
         showToast(error.message || 'Не удалось сохранить товар', 'error');

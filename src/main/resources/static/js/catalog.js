@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             productsContainer.innerHTML = '<p class="text-center">Загрузка...</p>';
             
-            const data = await api.getProducts();
+            const data = await api.getProducts({ page: 0, size: 200 });
             products = data.content || data;
             filterAndSort();
         } catch (error) {

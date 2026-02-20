@@ -853,8 +853,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Загрузка дашборда
-    loadDashboard();
+    // Загрузка нужного раздела по hash, иначе дашборд
+    const hash = window.location.hash ? window.location.hash.substring(1) : 'dashboard';
+    const sectionIds = new Set(['dashboard', 'products', 'orders', 'users', 'archive', 'categories', 'reviews']);
+    const targetId = sectionIds.has(hash) ? hash : 'dashboard';
+
+    links.forEach(l => l.classList.remove('active'));
+    const activeLink = Array.from(links).find(l => l.getAttribute('href') === `#${targetId}` || l.getAttribute('href') === `admin.html#${targetId}`);
+    if (activeLink) activeLink.classList.add('active');
+
+    sections.forEach(sec => sec.classList.remove('active'));
+    const targetSection = document.getElementById(targetId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+    loadSectionData(targetId);
 
     // Отображение имени администратора
     const userName = localStorage.getItem('userName') || 'Администратор';
