@@ -188,6 +188,17 @@
     transform: translateY(-2px);
 }
 
+.add-to-cart.in-cart,
+.add-to-cart.in-cart:hover,
+.add-to-cart:disabled {
+    background: #ffffff;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    transform: none;
+    opacity: 1;
+}
+
 /* Модальное окно */
 .modal {
     position: fixed;

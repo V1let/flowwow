@@ -146,8 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // === АВТОРИЗАЦИЯ ===
         updateAuthUI();
 
-        // Обновляем счётчик корзины при загрузке
-        updateCartCount();
+        // Обновляем корзину и состояние кнопок при загрузке
+        if (window.refreshCartState) {
+            window.refreshCartState();
+        }
 
         // Бургер-меню
         const hamburger = document.getElementById('hamburger');
@@ -206,6 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(err => console.error('Ошибка загрузки header/footer:', err));
 });
 
+// Единый обработчик клика по кнопкам корзины (делегирование)
+document.addEventListener('click', async (event) => {
+    const btn = event.target.closest('.add-to-cart');
+    if (!btn) return;
+
+    const productId = btn.dataset.id;
+    if (!productId || !window.toggleCartItem) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    await window.toggleCartItem(productId, 1);
+}, true);
+
 // Обновление UI авторизации
 function updateAuthUI() {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -241,18 +258,137 @@ function updateAuthUI() {
     }
 }
 
-// Обновление счётчика корзины
-async function updateCartCount() {
+function setCartButtonState(button, inCart) {
+    if (!button) return;
+    const originalText = button.dataset.originalText || button.textContent.trim() || 'В корзину';
+    if (!button.dataset.originalText) {
+        button.dataset.originalText = originalText;
+    }
+
+    if (inCart) {
+        button.textContent = 'В корзине';
+        button.classList.add('in-cart');
+    } else {
+        button.textContent = button.dataset.originalText || 'В корзину';
+        button.classList.remove('in-cart');
+    }
+}
+
+function setButtonsForProduct(productId, inCart) {
+    if (!productId) return;
+    const id = String(productId);
+    document.querySelectorAll(`.add-to-cart[data-id="${id}"]`).forEach(btn => {
+        setCartButtonState(btn, inCart);
+    });
+
+    const productBtn = document.getElementById('add-to-cart-btn');
+    if (productBtn && String(productBtn.dataset.id) === id) {
+        setCartButtonState(productBtn, inCart);
+    }
+}
+
+function updateCartCounterValue(totalItems) {
     const cartCountSidebar = document.getElementById('cart-count-sidebar');
     if (!cartCountSidebar) return;
+    cartCountSidebar.textContent = String(totalItems ?? 0);
+}
 
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-        cartCountSidebar.textContent = '0';
+window.applyCartState = function applyCartState(cart) {
+    if (!cart) {
+        updateCartCounterValue(0);
+        document.querySelectorAll('.add-to-cart').forEach(btn => setCartButtonState(btn, false));
+        const productBtn = document.getElementById('add-to-cart-btn');
+        if (productBtn) setCartButtonState(productBtn, false);
+        return;
+    }
+
+    if (typeof cart !== 'object') return;
+
+    window.__lastCartState = cart;
+
+    if (cart.totalItems !== undefined) {
+        updateCartCounterValue(cart.totalItems || 0);
+    }
+
+    if (!Array.isArray(cart.items)) return;
+
+    const items = cart.items;
+    const inCartIds = new Set(items.map(item => String(item.productId ?? '')));
+    const itemIdByProductId = new Map(
+        items.map(item => [String(item.productId ?? ''), String(item.id ?? '')])
+    );
+    window.__cartItemByProductId = itemIdByProductId;
+
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+        const id = btn.dataset.id;
+        if (!id) return;
+        setCartButtonState(btn, inCartIds.has(String(id)));
+    });
+
+    const productBtn = document.getElementById('add-to-cart-btn');
+    if (productBtn && productBtn.dataset.id) {
+        setCartButtonState(productBtn, inCartIds.has(String(productBtn.dataset.id)));
+    }
+};
+
+window.toggleCartItem = async function toggleCartItem(productId, quantity = 1) {
+    if (!productId) return;
+
+    const isAuth = typeof window.isLoggedIn === 'function'
+        ? window.isLoggedIn()
+        : localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isAuth) {
+        showToast('Войдите, чтобы добавить в корзину', 'error');
+        window.location.href = '../other/login.html';
+        return;
+    }
+
+    const map = window.__cartItemByProductId || new Map();
+    const itemId = map.get(String(productId));
+
+    try {
+        let cart = null;
+        if (itemId) {
+            cart = await window.api.removeFromCart(itemId);
+            showToast('Товар удалён из корзины', 'info');
+            setButtonsForProduct(productId, false);
+        } else {
+            cart = await window.api.addToCart(productId, quantity);
+            showToast('Товар добавлен в корзину', 'success');
+            setButtonsForProduct(productId, true);
+        }
+
+        if (cart && window.applyCartState) {
+            window.applyCartState(cart);
+        }
+        if (window.refreshCartState) {
+            window.refreshCartState();
+        }
+    } catch (error) {
+        showToast(error.message || 'Не удалось обновить корзину', 'error');
+    }
+};
+
+window.refreshCartState = async function refreshCartState() {
+    const isAuth = typeof window.isLoggedIn === 'function'
+        ? window.isLoggedIn()
+        : localStorage.getItem('isLoggedIn') === 'true';
+
+    if (!isAuth) {
+        window.applyCartState(null);
         return;
     }
 
     try {
+        if (window.api && typeof window.api.getCart === 'function') {
+            const cart = await window.api.getCart();
+            if (cart && typeof cart === 'object') {
+                window.applyCartState(cart);
+            }
+            return;
+        }
+
         const response = await fetch('http://localhost:8080/api/cart', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
@@ -261,12 +397,28 @@ async function updateCartCount() {
 
         if (response.ok) {
             const cart = await response.json();
-            cartCountSidebar.textContent = cart.totalItems || 0;
+            if (cart && typeof cart === 'object') {
+                window.applyCartState(cart);
+            }
         } else {
-            cartCountSidebar.textContent = '0';
+            window.applyCartState(null);
         }
     } catch (error) {
         console.error('Ошибка получения корзины:', error);
-        cartCountSidebar.textContent = '0';
+        window.applyCartState(null);
     }
-}
+};
+
+// LiveReload (dev only): auto-refresh on static file changes via Spring DevTools
+(function enableLiveReload() {
+    const host = window.location.hostname;
+    const isLocal = host === 'localhost' || host === '127.0.0.1';
+    if (!isLocal) return;
+    if (document.querySelector('script[data-livereload]')) return;
+
+    const script = document.createElement('script');
+    script.src = `http://${host}:35729/livereload.js?snipver=1`;
+    script.async = true;
+    script.setAttribute('data-livereload', 'true');
+    document.body.appendChild(script);
+})();

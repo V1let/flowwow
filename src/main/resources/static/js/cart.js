@@ -42,6 +42,10 @@ async function renderCart() {
         return;
     }
 
+    if (window.applyCartState) {
+        window.applyCartState(currentCart);
+    }
+
     const items = currentCart.items || [];
 
     // Обновляем счётчик в хедере
@@ -149,24 +153,25 @@ async function addToCart(productId, quantity = 1) {
     }
 
     try {
-        await api.addToCart(productId, quantity);
+        const cart = await api.addToCart(productId, quantity);
         showToast('Товар добавлен в корзину', 'success');
         // Обновляем корзину если мы на странице корзины
         if (document.getElementById('cart-items')) {
-            currentCart = await api.getCart();
+            currentCart = cart;
         }
-        updateCartCount();
+        if (window.applyCartState) {
+            window.applyCartState(cart);
+        } else {
+            updateCartCount();
+        }
     } catch (error) {
         showToast(error.message || 'Не удалось добавить в корзину', 'error');
     }
 }
 
 function updateCartCount() {
-    if (currentCart && currentCart.totalItems !== undefined) {
-        const cartCountSidebar = document.getElementById('cart-count-sidebar');
-        if (cartCountSidebar) {
-            cartCountSidebar.textContent = currentCart.totalItems;
-        }
+    if (window.applyCartState && currentCart) {
+        window.applyCartState(currentCart);
     }
 }
 
@@ -280,6 +285,12 @@ async function renderFavorites() {
     listEl.style.display = 'grid';
     emptyEl.style.display = 'none';
 
+    if (window.applyCartState && window.__lastCartState) {
+        window.applyCartState(window.__lastCartState);
+    } else if (window.refreshCartState) {
+        window.refreshCartState();
+    }
+
     // Обработчики удаления из избранного
     listEl.querySelectorAll('.wishlist-btn i').forEach(heart => {
         heart.addEventListener('click', () => {
@@ -306,8 +317,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.add-to-cart').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            const { id, name, price, image } = btn.dataset;
-            addToCart(id, name, price, image);
+            const { id } = btn.dataset;
+            if (window.toggleCartItem) {
+                window.toggleCartItem(id, 1);
+            } else {
+                addToCart(id, 1);
+            }
         });
     });
 

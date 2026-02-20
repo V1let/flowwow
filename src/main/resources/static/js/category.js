@@ -103,6 +103,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         attachEventListeners();
+
+        if (window.applyCartState && window.__lastCartState) {
+            window.applyCartState(window.__lastCartState);
+        } else if (window.refreshCartState) {
+            window.refreshCartState();
+        }
     }
 
     // ────────────── ОБРАБОТЧИКИ СОБЫТИЙ ──────────────
@@ -111,7 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const { id } = btn.dataset;
-                await addToCart(id, 1);
+                if (window.toggleCartItem) {
+                    await window.toggleCartItem(id, 1);
+                } else {
+                    await addToCart(id, 1);
+                }
             });
         });
 
@@ -170,9 +180,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            await api.addToCart(productId, quantity);
-            showToast('Товар добавлен в корзину', 'success');
-            updateCartCount();
+            if (window.toggleCartItem) {
+                await window.toggleCartItem(productId, quantity);
+            } else {
+                const cart = await api.addToCart(productId, quantity);
+                showToast('Товар добавлен в корзину', 'success');
+                if (window.applyCartState) {
+                    window.applyCartState(cart);
+                } else {
+                    updateCartCount();
+                }
+            }
         } catch (error) {
             showToast(error.message || 'Не удалось добавить в корзину', 'error');
         }
@@ -180,20 +198,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ────────────── ОБНОВЛЕНИЕ СЧЁТЧИКА КОРЗИНЫ ──────────────
     async function updateCartCount() {
-        if (!isLoggedIn()) {
-            const cartCountSidebar = document.getElementById('cart-count-sidebar');
-            if (cartCountSidebar) cartCountSidebar.textContent = '0';
-            return;
-        }
-
-        try {
-            const cart = await api.getCart();
-            const cartCountSidebar = document.getElementById('cart-count-sidebar');
-            if (cartCountSidebar) {
-                cartCountSidebar.textContent = cart.totalItems || 0;
-            }
-        } catch (error) {
-            console.error('Ошибка получения корзины:', error);
+        if (window.refreshCartState) {
+            await window.refreshCartState();
         }
     }
 

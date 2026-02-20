@@ -53,6 +53,12 @@ function renderPopularProducts(products) {
     }).join('');
 
     attachProductCardListeners(container);
+
+    if (window.applyCartState && window.__lastCartState) {
+        window.applyCartState(window.__lastCartState);
+    } else if (window.refreshCartState) {
+        window.refreshCartState();
+    }
 }
 
 // ────────────── ОБРАБОТЧИКИ ДЛЯ КАРТОЧЕК ТОВАРОВ ──────────────
@@ -71,8 +77,12 @@ function attachProductCardListeners(container) {
     container.querySelectorAll('.add-to-cart').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.preventDefault();
-            const { id, name, price, image } = btn.dataset;
-            await addToCart(id, 1);
+            const { id } = btn.dataset;
+            if (window.toggleCartItem) {
+                await window.toggleCartItem(id, 1);
+            } else {
+                await addToCart(id, 1);
+            }
         });
     });
 
@@ -133,9 +143,17 @@ async function addToCart(productId, quantity = 1) {
     }
 
     try {
-        await api.addToCart(productId, quantity);
-        showToast('Товар добавлен в корзину', 'success');
-        updateCartCount();
+        if (window.toggleCartItem) {
+            await window.toggleCartItem(productId, quantity);
+        } else {
+            const cart = await api.addToCart(productId, quantity);
+            showToast('Товар добавлен в корзину', 'success');
+            if (window.applyCartState) {
+                window.applyCartState(cart);
+            } else {
+                updateCartCount();
+            }
+        }
     } catch (error) {
         showToast(error.message || 'Не удалось добавить в корзину', 'error');
     }
@@ -143,19 +161,8 @@ async function addToCart(productId, quantity = 1) {
 
 // ────────────── ОБНОВЛЕНИЕ СЧЁТЧИКА КОРЗИНЫ ──────────────
 async function updateCartCount() {
-    const cartCountSidebar = document.getElementById('cart-count-sidebar');
-    if (!cartCountSidebar) return;
-
-    if (!isLoggedIn()) {
-        cartCountSidebar.textContent = '0';
-        return;
-    }
-
-    try {
-        const cart = await api.getCart();
-        cartCountSidebar.textContent = cart.totalItems || 0;
-    } catch (error) {
-        cartCountSidebar.textContent = '0';
+    if (window.refreshCartState) {
+        await window.refreshCartState();
     }
 }
 
